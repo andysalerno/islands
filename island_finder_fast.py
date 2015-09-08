@@ -1,19 +1,19 @@
 import random
 
-map_height = 200
-map_width = 200
+map_height = 5
+map_width = 5
 
 
 def find_neighbors(j, k, island_map):
-    neighbors_found = []
+    neighbors_found = set()
     if j > 0 and island_map[(j - 1, k)] == 1:
-        neighbors_found.append((j - 1, k))
+        neighbors_found.add((j - 1, k))
     if j < map_height - 1 and island_map[(j + 1, k)] == 1:
-        neighbors_found.append((j + 1, k))
+        neighbors_found.add((j + 1, k))
     if k > 0 and island_map[(j, k - 1)] == 1:
-        neighbors_found.append((j, k - 1))
+        neighbors_found.add((j, k - 1))
     if k < map_width - 1 and island_map[(j, k + 1)] == 1:
-        neighbors_found.append((j, k + 1))
+        neighbors_found.add((j, k + 1))
 
     return neighbors_found
 
@@ -23,9 +23,9 @@ def find_neighbors(j, k, island_map):
 def find_entire_island(j, k, island_map, island_coords=None):
     if island_coords is None:
         island_coords = set()
-    cardinal_neighbors = find_neighbors(j, k, island_map)  # get all neighbors of this coord
-    cardinal_neighbors = [x for x in cardinal_neighbors if
-                          x not in island_coords]  # remove coords we've already checked
+
+    cardinal_neighbors = find_neighbors(j, k, island_map)
+    cardinal_neighbors -= island_coords  # remove coords we've already checked
     island_coords.update(cardinal_neighbors)
 
     for neighbor in cardinal_neighbors:
@@ -37,7 +37,10 @@ def find_entire_island(j, k, island_map, island_coords=None):
 def print_map(island_map):
     for j in range(map_height):
         for k in range(map_width):
-            print(island_map[j, k], end='')
+            if island_map[j, k] == 1:
+                print('1', end='')
+            else:
+                print(' ', end='')
             if k == map_width - 1:
                 print()
 
